@@ -8,7 +8,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import EnhancedTableHead from './TableHead';
 import Button from "@material-ui/core/Button/Button";
-import Link from "react-router-dom/es/Link";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "./UI/EditIcon";
 
@@ -53,43 +52,33 @@ const styles = theme => ({
 class EnhancedTable extends React.Component {
     state = {
         order: 'asc',
-        orderBy: 'calories',
-        data: [
-            {
-                name: "Alda",
-                title: "Engineer",
-                gender: "Female",
-                cell: "412-923-1222",
-                startDate: "2002/02/20",
-                email: "alda@1.com",
-                manager: {
-                    name: "Allen",
-                    id: "5bb812097c1e3c13b48b3800"
-                },
-                dr: []
-            }
-        ],
+        orderBy: 'name'
     };
+
+    componentDidMount() {
+        this.props.getEmployees();
+    }
 
     handleRequestSort = (event, property) => {
         const orderBy = property;
         let order = 'desc';
-
         if (this.state.orderBy === property && this.state.order === 'desc') {
             order = 'asc';
         }
-
         this.setState({ order, orderBy });
     };
 
 
     render() {
         const { classes } = this.props;
-        const { data, order, orderBy} = this.state;
-
+        const { order, orderBy} = this.state;
+        if (this.props.employees.isFetching) {
+            return <div>Getting data</div>
+        }
+        const {useSearchData, searchWord} = this.props.search;
+        const data = useSearchData ? this.props.employees.data.filter(el => el.name === searchWord) : this.props.employees.data;
         return (
             <div>
-
                 <Paper className={classes.root}>
                     <div className={classes.tableWrapper}>
                         <Table className={classes.table} aria-labelledby="tableTitle">
@@ -105,10 +94,10 @@ class EnhancedTable extends React.Component {
                                             <TableRow
                                                 hover
                                                 tabIndex={-1}
-                                                key={n.id}
+                                                key={n._id}
                                             >
                                                 <TableCell>
-                                                        Avatar
+                                                    <DeleteIcon className={classes.icon} />
                                                 </TableCell>
                                                 <TableCell>
                                                     <Button variant="contained" color="primary" className={classes.button}>
@@ -129,8 +118,8 @@ class EnhancedTable extends React.Component {
                                                 <TableCell>{n.gender}</TableCell>
                                                 <TableCell>{n.cell}</TableCell>
                                                 <TableCell>{n.email}</TableCell>
-                                                <TableCell>{n.manager.name}</TableCell>
-                                                <TableCell>{n.dr.length}</TableCell>
+                                                <TableCell>{n.manager === undefined ? "" : n.manager.name}</TableCell>
+                                                <TableCell>{n.direct_reports === undefined ? 0 : n.direct_reports.length}</TableCell>
                                             </TableRow>
                                         );
                                     })}

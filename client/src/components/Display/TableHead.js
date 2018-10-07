@@ -13,7 +13,7 @@ const rows = [
     { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
     { id: 'title', numeric: false, disablePadding: false, label: 'Title' },
     { id: 'sex', numeric: false, disablePadding: false, label: 'Gender' },
-    { id: 'cell', numeric: false, disablePadding: false, label: 'cell' },
+    { id: 'cell', numeric: false, disablePadding: false, label: 'Cell' },
     { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
     { id: 'manager', numeric: false, disablePadding: false, label: 'manager' },
     { id: 'dr', numeric: false, disablePadding: false, label: 'DR' },
@@ -32,28 +32,32 @@ class EnhancedTableHead extends React.Component {
             <TableHead>
                 <TableRow>
                     {rows.map(row => {
-                        return (
-                            <TableCell
-                                key={row.id}
-                                numeric={row.numeric}
-                                padding={row.disablePadding ? 'none' : 'default'}
-                                sortDirection={orderBy === row.id ? order : false}
-                            >
-                                <Tooltip
-                                    title="Sort"
-                                    placement={row.numeric ? 'bottom-end' : 'bottom-start'}
-                                    enterDelay={300}
+                        if (row.id === "name" || row.id === "title") {
+                            return (
+                                <TableCell
+                                    key={row.id}
+                                    numeric={row.numeric}
+                                    padding={row.disablePadding ? 'none' : 'default'}
+                                    sortDirection={order}
                                 >
-                                    <TableSortLabel
-                                        active={orderBy === row.id}
-                                        direction={order}
-                                        onClick={this.createSortHandler(row.id)}
+                                    <Tooltip
+                                        title="Sort"
+                                        enterDelay={300}
                                     >
-                                        {row.label}
-                                    </TableSortLabel>
-                                </Tooltip>
-                            </TableCell>
-                        );
+                                        <TableSortLabel
+                                            active={orderBy === row.id}
+                                            direction={order}
+                                            onClick={this.createSortHandler(row.id)}
+                                        >
+                                            {row.label}
+                                        </TableSortLabel>
+                                    </Tooltip>
+                                </TableCell>
+                            );
+                        } else {
+                            return <TableCell key={row.id}>{row.label}</TableCell>
+                        }
+
                     }, this)}
                 </TableRow>
             </TableHead>

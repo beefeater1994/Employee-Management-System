@@ -8,6 +8,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from "@material-ui/core/Button/Button";
+import Form from "react-bootstrap/es/Form";
 
 const styles = theme => ({
     root: {
@@ -77,9 +78,29 @@ const styles = theme => ({
             display: 'none',
         },
     },
+    button: {
+        marginLeft: 30
+    }
 });
 
 class PrimarySearchAppBar extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            input: ""
+        }
+    }
+
+    changeHandler = (event) => {
+        this.setState({input: event.target.value});
+    };
+
+    submitHandler = (event) => {
+        console.log(this.state.input);
+        this.props.setAndUseSearch(this.state.input);
+        this.setState({input: ""});
+        event.preventDefault();
+    };
 
     render() {
         const { classes } = this.props;
@@ -90,19 +111,26 @@ class PrimarySearchAppBar extends React.Component {
                         <Typography className={classes.title} variant="title" color="inherit" noWrap>
                             Employee Management System
                         </Typography>
-                        <div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                                <SearchIcon />
+                        <Form onSubmit={this.submitHandler}>
+                            <div className={classes.search}>
+                                <div className={classes.searchIcon}>
+                                    <SearchIcon />
+                                </div>
+                                <Input
+                                    placeholder="Search…"
+                                    disableUnderline
+                                    classes={{
+                                        root: classes.inputRoot,
+                                        input: classes.inputInput,
+                                    }}
+                                    input={this.state.input}
+                                    onChange={this.changeHandler}
+                                />
                             </div>
-                            <Input
-                                placeholder="Search…"
-                                disableUnderline
-                                classes={{
-                                    root: classes.inputRoot,
-                                    input: classes.inputInput,
-                                }}
-                            />
-                        </div>
+                        </Form>
+                        <Button variant="contained" color="primary" className={classes.button} onClick={this.props.resetSearch}>
+                            Show All
+                        </Button>
                         <Button variant="contained" color="primary" className={classes.button}>
                             CREATE NEW USER
                         </Button>
