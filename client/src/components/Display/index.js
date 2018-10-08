@@ -97,16 +97,16 @@ class EnhancedTable extends React.Component {
                                                 key={n._id}
                                             >
                                                 <TableCell>
-                                                    <DeleteIcon className={classes.icon} />
+                                                    {n.avatar}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Button variant="contained" color="primary" className={classes.button}>
+                                                    <Button variant="outlined" className={classes.button}>
                                                         <EditIcon />
                                                         EDIT
                                                     </Button>
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Button variant="contained" color="primary" className={classes.button}>
+                                                    <Button variant="outlined" className={classes.button}>
                                                         <DeleteIcon />
                                                         Delete
                                                     </Button>
