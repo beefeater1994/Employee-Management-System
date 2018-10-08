@@ -26,7 +26,7 @@ class App extends Component {
                             />
                         </Grid>
                     }/>
-                    <Route path='/create' component={Form}/>
+                    <Route path='/create' render={(props) => <Form {...props}/>}/>
                 </div>
             </BrowserRouter>
         )

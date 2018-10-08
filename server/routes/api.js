@@ -29,11 +29,17 @@ module.exports = function(app) {
         });
     });
     // Post a new employee
-    app.post('/', upload.single('avatar'), (req, res) => {
+    app.post('/employees', upload.single('avatar'), (req, res) => {
         const employee = new Employee({
             name: req.body.name,
             title: req.body.title,
-            avatar: req.file.filename,
+            gender: req.body.gender,
+            level: req.body.level,
+            cell: req.body.cell,
+            email: req.body.email,
+            manager: req.body.manager,
+            direct_reports: req.body.dr,
+            avatar: req.file === undefined ? "Icon" : req.file.filename,
         });
         employee.save((err, data) => {
             if (err) return res.send(err);

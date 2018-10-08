@@ -30,6 +30,21 @@ export const getData = () => {
     };
 };
 
+export const createData = (newUser) => {
+    return (dispatch, store) => {
+        //dispatch(requestStart());
+        axios
+            .post('/employees', newUser)
+            .then(response => {
+                //dispatch(requestSuccess(response));
+            })
+            .catch(err => {
+                //dispatch(requestFail(err));
+                console.log(err);
+            });
+    };
+};
+
 export const setAndUseSearch = (text) => {
     return {
         type: "SET_AND_USE_SEARCH",

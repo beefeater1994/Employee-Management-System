@@ -106,7 +106,7 @@ class PrimarySearchAppBar extends React.Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <AppBar position="static">
+                <AppBar position="static" color="default">
                     <Toolbar>
                         <Typography className={classes.title} variant="title" color="inherit" noWrap>
                             Employee Management System

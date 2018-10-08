@@ -6,16 +6,16 @@ const employeeSchema = new Schema({
     name: {type: String, required: true},
     title: {type: String, required: true},
     gender: {type: String},
-    startDate: {type: Date},
+    level: {type: Number},
     cell: {type: String},
     email: {type: String},
     manager: {
-        id: {type: Schema.Types.ObjectId},
+        id: {type: String},
         name: {type: String}
     },
     direct_reports: [
         {
-            type: Schema.Types.ObjectId
+            type: String
         }
     ],
 });
