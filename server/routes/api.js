@@ -37,8 +37,7 @@ module.exports = function(app) {
             level: req.body.level,
             cell: req.body.cell,
             email: req.body.email,
-            manager: req.body.manager,
-            direct_reports: req.body.dr,
+            manager: JSON.parse(req.body.manager),
             avatar: req.file === undefined ? "Icon" : req.file.filename,
         });
         employee.save((err, data) => {
@@ -46,12 +45,16 @@ module.exports = function(app) {
             console.log(`Create a new employee with id ${data._id}`);
             // Push the new employee into his/her manager's DRs, if manager exists.
             if (data.manager.id !== undefined) {
-                Employee.findOneAndUpdate({_id: data.manager.id}, {$push:{direct_reports:data._id}}, (errManager) => {
+                const drObj = {
+                    name: data.name,
+                    id: data._id
+                };
+                Employee.findOneAndUpdate({_id: data.manager.id}, {$push:{direct_reports:drObj}}, (errManager) => {
                     if (err) {
-                        console.log(`Putting new employee ${data._id} into his manager ${data.manager.id}'s DR failed!\n` + errManager);
+                        console.log(`Putting new employee ${data.name} whose id is ${data._id} into his manager ${data.manager.id}'s DR failed!\n` + errManager);
                         return res.send(err);
                     }
-                    console.log(`Putting new employee ${data._id} into his manager ${data.manager.id}'s DR succeed!`);
+                    console.log(`Putting new employee ${data.name} whose id is ${data._id} into his manager ${data.manager.id}'s DR succeed!`);
                     res.send({ message: "Employee add success" });
                 });
             } else {
@@ -77,15 +80,24 @@ module.exports = function(app) {
         let id = String(req.params.id);
         console.log(id);
         Employee.deleteOne({_id: id}, (err) =>{
-            if (err) res.send(err);
+            if (err) if (err) {
+                console.log(err);
+                return res.send(err);
+            }
             console.log("Deleted one employee with ID: " + id);
             // 1->M relationship, deleted the manager, the DRs have no manager anymore, update DRS
             Employee.updateMany({"manager.id": id}, { $set: { "manager" : "" } },(err, user) =>{
-                if (err) res.send(err);
+                if (err) {
+                    console.log(err);
+                    return res.send(err);
+                }
                 console.log("Deleted this guy as manager.");
                 // 1->M relationship, delete this guy as one dr, update the manager
-                Employee.findOneAndUpdate({direct_reports: id}, { $pull: { direct_reports: id } },(err, user)=>{
-                    if (err) res.send(err);
+                Employee.findOneAndUpdate({direct_reports: {$elemMatch: {id: id}}}, { $pull: { direct_reports: {id: id}}},(err, user)=>{
+                    if (err) {
+                        console.log(err);
+                        return res.send(err);
+                    }
                     console.log("Delete this guy as a direct report");
                     console.log("Delete finished!");
                     res.send("Delete finished!")

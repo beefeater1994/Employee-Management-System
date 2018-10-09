@@ -24,7 +24,7 @@ const levelOptions= [
 class FormExampleForm extends Component{
     constructor(props) {
         super(props);
-        this.state = {name: "", title: "", gender: "", level: "", cell: "", email: "", manager: {}, dr: []}
+        this.state = {avatar:"", name: "", title: "", gender: "", level: "", cell: "", email: "", manager: {}}
     }
     componentDidMount() {
         this.props.getAllEmployees();
@@ -45,13 +45,25 @@ class FormExampleForm extends Component{
     };
 
     submitHandler = () => {
-        console.log(this.state);
-        this.props.createNewEmployee(this.state);
+        const formData = new FormData();
+        formData.append("name", this.state.name);
+        formData.append("title", this.state.title);
+        formData.append("gender", this.state.gender);
+        formData.append("level", this.state.level);
+        formData.append("cell", this.state.cell);
+        formData.append("email", this.state.email);
+        formData.append("manager", JSON.stringify(this.state.manager));
+        formData.append("avatar", this.state.avatar, this.state.avatar.name);
+        this.props.createNewEmployee(formData);
         this.props.history.push(`/employees`);
     };
     managerHandler = (e, { value }) => this.setState({ manager: value });
     genderHandler = (e, { value }) => this.setState({ gender: value });
     levelHandler = (e, { value }) => this.setState({ level: value });
+
+    fileChangeHandler = (event) => {
+        this.setState({avatar: event.target.files[0]});
+    };
 
 
     render() {
@@ -89,7 +101,7 @@ class FormExampleForm extends Component{
                 <div className="ui grid massive message">
                     <div className="ui container">
                         <div className="row">
-                            <form className="ui form">
+                            <form className="ui form" >
                                 <div className="two fields">
                                     <div className="field">
                                         <label>Name</label>
@@ -135,11 +147,11 @@ class FormExampleForm extends Component{
                                             accept="image/*"
                                             style={{display:'none'}}
                                             id="outlined-button-file"
-                                            multiple
                                             type="file"
+                                            onChange={this.fileChangeHandler}
                                         />
                                         <label htmlFor="outlined-button-file">
-                                            <Button variant="outlined" component="span" >
+                                            <Button variant="outlined" component="span" onClick={() => console.log(1)}>
                                                 Upload
                                             </Button>
                                         </label>
