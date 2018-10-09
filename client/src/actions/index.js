@@ -1,50 +1,173 @@
 import axios from 'axios';
-function requestStart() {
+
+/*
+    Actions to set employee to edit
+ */
+export const setEmployeeToEdit = (obj) => {
     return {
-        type: 'USER_FETCH_START'
-    };
-}
-function requestSuccess(response) {
+        type: "SET_EMPLOYEE_TO_EDIT",
+        employee: obj
+    }
+};
+export const resetEmployeeToEdit = () => {
     return {
-        type: 'USER_FETCH_SUCCESS',
-        data: response.data
-    };
-}
-function requestFail(error) {
+        type: "RESET_EMPLOYEE_TO_EDIT",
+    }
+};
+
+/*
+    Actions to get all employees.
+ */
+const getAllEmployeesStart = () =>{
     return {
-        type: 'USER_FETCH_FAIL',
-        error
-    };
-}
-export const getData = () => {
-    return (dispatch, store) => {
-        dispatch(requestStart());
-        axios
-            .get('/employees')
-            .then(response => {
-                dispatch(requestSuccess(response));
-            })
-            .catch(err => {
-                dispatch(requestFail(err));
-            });
+        type: 'GET_ALL_EMPLOYEES_START'
     };
 };
 
-export const createData = (newUser) => {
+const getAllEmployeesSuccess = (response) =>{
+    return {
+        type: 'GET_ALL_EMPLOYEES_SUCCESS',
+        data: response.data
+    };
+};
+
+const getAllEmployeesFail = (error) =>{
+    return {
+        type: 'GET_ALL_EMPLOYEES_FAIL',
+        error
+    };
+};
+
+export const getAllEmployees = () => {
     return (dispatch, store) => {
-        //dispatch(requestStart());
+        dispatch(getAllEmployeesStart());
         axios
-            .post('/employees', newUser)
+            .get('/employees')
             .then(response => {
-                //dispatch(requestSuccess(response));
+                dispatch(getAllEmployeesSuccess(response));
             })
             .catch(err => {
-                //dispatch(requestFail(err));
+                dispatch(getAllEmployeesFail(err));
+            });
+    };
+};
+/*
+    Actions to add new employee.
+ */
+
+const addEmployeeStart = () =>{
+    return {
+        type: 'ADD_EMPLOYEE_START'
+    };
+};
+
+const addEmployeeSuccess = (response) =>{
+    return {
+        type: 'ADD_EMPLOYEE_SUCCESS',
+        response
+    };
+};
+
+const addEmployeeFail = (error) =>{
+    return {
+        type: 'ADD_EMPLOYEE_FAIL',
+        error
+    };
+};
+
+export const createNewEmployee = (newEmployee) => {
+    return (dispatch, store) => {
+        dispatch(addEmployeeStart());
+        axios
+            .post('/employees', newEmployee)
+            .then(response => {
+                dispatch(addEmployeeSuccess(response));
+                dispatch(getAllEmployees());
+            })
+            .catch(err => {
+                dispatch(addEmployeeFail(err));
                 console.log(err);
             });
     };
 };
 
+/*
+    Action to edit employee
+ */
+const editEmployeeStart = () =>{
+    return {
+        type: 'EDIT_EMPLOYEE_START'
+    };
+};
+
+const editEmployeeSuccess = (response) =>{
+    return {
+        type: 'EDIT_EMPLOYEE_SUCCESS',
+        response
+    };
+};
+
+const editEmployeeFail = (error) =>{
+    return {
+        type: 'EDIT_EMPLOYEE_FAIL',
+        error
+    };
+};
+
+export const updateEmployee = (obj) => {
+    console.log(obj._id);
+    return (dispatch, store) => {
+        dispatch(editEmployeeStart());
+        axios
+            .put(`/employees/${obj._id}`, obj)
+            .then(response => {
+                dispatch(editEmployeeSuccess(response));
+                dispatch(getAllEmployees());
+            })
+            .catch(err => {
+                dispatch(editEmployeeFail(err));
+                console.log(err);
+            });
+    };
+};
+
+/*
+    Actions to delete employee
+ */
+const deleteEmployeeSuccess = (response) =>{
+    return {
+        type: 'EDIT_EMPLOYEE_SUCCESS',
+        response
+    };
+};
+
+const deleteEmployeeFail = (error) =>{
+    return {
+        type: 'DELETE_EMPLOYEE_FAIL',
+        error
+    };
+};
+
+export const deleteEmployee = (id) => {
+    return (dispatch, store) => {
+        axios
+            .delete('/employees/'+ id)
+            .then(response => {
+                dispatch(deleteEmployeeSuccess(response));
+                dispatch(getAllEmployees());
+            })
+            .catch(err => {
+                dispatch(deleteEmployeeFail(err));
+            });
+    };
+};
+
+
+
+
+/*
+    Actions about search
+ */
 export const setAndUseSearch = (text) => {
     return {
         type: "SET_AND_USE_SEARCH",

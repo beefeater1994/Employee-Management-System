@@ -68,7 +68,6 @@ class EnhancedTable extends React.Component {
         this.setState({ order, orderBy });
     };
 
-
     render() {
         const { classes } = this.props;
         const { order, orderBy} = this.state;
@@ -100,13 +99,13 @@ class EnhancedTable extends React.Component {
                                                     {n.avatar}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Button variant="outlined" className={classes.button}>
+                                                    <Button variant="outlined" className={classes.button} onClick={() => this.props.editHandler(n)}>
                                                         <EditIcon />
                                                         EDIT
                                                     </Button>
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Button variant="outlined" className={classes.button}>
+                                                    <Button variant="outlined" className={classes.button} onClick={() => this.props.deleteHandler(n._id)}>
                                                         <DeleteIcon />
                                                         Delete
                                                     </Button>

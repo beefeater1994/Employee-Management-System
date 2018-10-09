@@ -27,7 +27,7 @@ class FormExampleForm extends Component{
         this.state = {name: "", title: "", gender: "", level: "", cell: "", email: "", manager: {}, dr: []}
     }
     componentDidMount() {
-        this.props.getEmployees();
+        this.props.getAllEmployees();
     }
 
     changeHandler = (event) => {
@@ -45,18 +45,17 @@ class FormExampleForm extends Component{
     };
 
     submitHandler = () => {
-        this.props.createEmployee(this.state);
+        console.log(this.state);
+        this.props.createNewEmployee(this.state);
         this.props.history.push(`/employees`);
     };
     managerHandler = (e, { value }) => this.setState({ manager: value });
     genderHandler = (e, { value }) => this.setState({ gender: value });
     levelHandler = (e, { value }) => this.setState({ level: value });
-    drHandler = (e, {value}) => {
-        this.setState({dr: value});
-    };
 
 
     render() {
+        // Your manager can only be the other employees whose level is above you.
         const managerOptions = this.props.employees.data.filter(el => el.level < this.state.level).map(el => {
             return {
                 key: el._id,
@@ -68,13 +67,6 @@ class FormExampleForm extends Component{
             }
         });
         managerOptions.unshift({key: "none", text: "None", value: "None"});
-        const drOptions = this.props.employees.data.filter(el => el.level > this.state.level).map(el => {
-            return {
-                key: el._id,
-                text: el.name,
-                value: el._id
-            }
-        });
 
         return (
             <div>
@@ -85,7 +77,7 @@ class FormExampleForm extends Component{
                             <div className="ui form">
                                 <div className="inline fields">
                                     <div className="field">
-                                        <div className="ui green button">
+                                        <div className="ui green button" onClick={() => this.props.history.push(`/employees`)}>
                                             HOME
                                         </div>
                                     </div>
@@ -130,18 +122,15 @@ class FormExampleForm extends Component{
                                         <input type="text" name="email" placeholder="Email" value={this.state.email} onChange={this.changeHandler}/>
                                     </div>
                                 </div>
-                                <div className="two fields">
-                                    <div className="field">
+                                <div className="fields">
+                                    <div className="eight wide field">
                                         <label>Manager</label>
                                         <Dropdown placeholder='Select Manager' fluid selection options={managerOptions} onChange={this.managerHandler} value={this.state.manager}/>
                                     </div>
-                                    <div className="field">
-                                        <label>Direct Reports</label>
-                                        <Dropdown placeholder='Select Direct Reports' fluid multiple selection options={drOptions} onChange={this.drHandler}/>
+                                    <div className="two wide field">
                                     </div>
-                                </div>
-                                <div className="two fields">
-                                    <div className="field">
+                                    <div className="three wide field">
+                                        <label>Upload Avatar</label>
                                         <input
                                             accept="image/*"
                                             style={{display:'none'}}
@@ -150,12 +139,13 @@ class FormExampleForm extends Component{
                                             type="file"
                                         />
                                         <label htmlFor="outlined-button-file">
-                                            <Button variant="outlined" component="span">
+                                            <Button variant="outlined" component="span" >
                                                 Upload
                                             </Button>
                                         </label>
                                     </div>
-                                    <div className="field">
+                                    <div className="three wide field">
+                                        <label>Submit</label>
                                         <Button variant="outlined" onClick={this.submitHandler}>
                                             Submit
                                         </Button>
@@ -192,11 +182,11 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         // Action to get all the employees
-        getEmployees: () => {
-            dispatch(actions.getData());
+        getAllEmployees: () => {
+            dispatch(actions.getAllEmployees());
         },
-        createEmployee: (newEmployee) => {
-            dispatch(actions.createData(newEmployee));
+        createNewEmployee: (newEmployee) => {
+            dispatch(actions.createNewEmployee(newEmployee));
         }
     }
 };

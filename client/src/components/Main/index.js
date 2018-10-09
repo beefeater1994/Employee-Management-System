@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Table from '../Display/index';
+import Display from '../Display/index';
 import connect from "react-redux/es/connect/connect";
 import * as actions from '../../actions'
 import Form from "semantic-ui-react/dist/commonjs/collections/Form/Form";
@@ -23,6 +23,15 @@ class MainPage extends Component {
         this.props.setAndUseSearch(this.state.input);
         this.setState({input: ""});
         event.preventDefault();
+    };
+
+    editHandler = (el) => {
+        this.props.history.push(`/edit`);
+        this.props.setEmployeeToEdit(el);
+    };
+
+    deleteHandler = (id) => {
+        this.props.deleteEmployee(id);
     };
 
     render() {
@@ -53,10 +62,12 @@ class MainPage extends Component {
                 </div>
                 <div className="ui grid massive message">
                     <div>
-                        <Table
+                        <Display
                             employees={this.props.employees}
                             getEmployees={this.props.getEmployees}
                             search={this.props.search}
+                            editHandler={this.editHandler}
+                            deleteHandler={this.deleteHandler}
                         />
                     </div>
                 </div>
@@ -89,13 +100,19 @@ const mapDispatchToProps = dispatch => {
     return {
         // Action to get all the employees
         getEmployees: () => {
-            dispatch(actions.getData());
+            dispatch(actions.getAllEmployees());
         },
         setAndUseSearch: (text) => {
             dispatch(actions.setAndUseSearch(text));
         },
         resetSearch: () => {
             dispatch(actions.resetSearch());
+        },
+        setEmployeeToEdit: (obj) => {
+            dispatch(actions.setEmployeeToEdit(obj));
+        },
+        deleteEmployee: (id) => {
+            dispatch(actions.deleteEmployee(id));
         }
     }
 };
