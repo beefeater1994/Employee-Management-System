@@ -19,15 +19,14 @@ class MainPage extends Component {
     };
 
     submitHandler = (event) => {
-        console.log(this.state.input);
         this.props.setAndUseSearch(this.state.input);
         this.setState({input: ""});
         event.preventDefault();
     };
 
-    editHandler = (el) => {
-        this.props.history.push(`/edit`);
-        this.props.setEmployeeToEdit(el);
+    profileHandler = (el) => {
+        this.props.history.push(`/employees/${el._id}`);
+        this.props.getOneEmployee(el._id);
     };
 
     deleteHandler = (id) => {
@@ -66,7 +65,7 @@ class MainPage extends Component {
                             employees={this.props.employees}
                             getEmployees={this.props.getEmployees}
                             search={this.props.search}
-                            editHandler={this.editHandler}
+                            profileHandler={this.profileHandler}
                             deleteHandler={this.deleteHandler}
                         />
                     </div>
@@ -85,7 +84,7 @@ class MainPage extends Component {
                     </div>
                 </div>
             </div>
-    );
+        );
     }
 }
 
@@ -108,11 +107,11 @@ const mapDispatchToProps = dispatch => {
         resetSearch: () => {
             dispatch(actions.resetSearch());
         },
-        setEmployeeToEdit: (obj) => {
-            dispatch(actions.setEmployeeToEdit(obj));
-        },
         deleteEmployee: (id) => {
             dispatch(actions.deleteEmployee(id));
+        },
+        getOneEmployee: (id) => {
+            dispatch(actions.getOneEmployee(id));
         }
     }
 };

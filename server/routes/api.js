@@ -28,13 +28,20 @@ module.exports = function(app) {
             res.status(200).json(users);
         });
     });
+    // Get one employee with a specific id
+    app.get('/employees/:id', (req, res) => {
+        let id = String(req.params.id);
+        Employee.findOne({_id: id}, function(err, user) {
+            if (err) throw err;
+            res.status(200).json(user);
+        });
+    });
     // Post a new employee
     app.post('/employees', upload.single('avatar'), (req, res) => {
         const employee = new Employee({
             name: req.body.name,
             title: req.body.title,
             gender: req.body.gender,
-            level: req.body.level,
             cell: req.body.cell,
             email: req.body.email,
             manager: JSON.parse(req.body.manager),
@@ -65,22 +72,42 @@ module.exports = function(app) {
     });
     // Update a new employee
     app.put('/employees/:id', upload.single('avatar'), (req, res) => {
-        let id = String(req.params.id);
-        console.log(req.body);
-        Employee.findOneAndUpdate({_id: id}, {
-            cell: req.body.cell,
-            email: req.body.email
-        }, (err) =>{
-            if (err) console.log(err);
-            res.send('User successfully updated!');
+        let id = String(req.body.id);
+        Employee.findOne({_id: id}, function(err, user) {
+            if (err) {
+                console.log(err);
+                return res.send(err);
+            }
+            let managerId = user.manager.id;
+            let dr = user.direct_reports;
+            // Save this new guy first
+            const employee = {
+                title: req.body.title,
+                gender: req.body.gender,
+                cell: req.body.cell,
+                email: req.body.email,
+                manager: JSON.parse(req.body.manager),
+                avatar: req.file === undefined ? "Icon" : req.file.filename,
+            };
+            Employee.findOneAndUpdate({_id: id}, employee, (err, newEmployee) => {
+                if (err) {
+                    console.log(err);
+                    return res.send(err);
+                }
+                console.log(`***[Update]*** employee with id ${id}`);
+
+            });
+
         });
+
+
     });
     // Delete a new employee
     app.delete('/employees/:id', (req, res) => {
         let id = String(req.params.id);
         console.log(id);
         Employee.deleteOne({_id: id}, (err) =>{
-            if (err) if (err) {
+            if (err) {
                 console.log(err);
                 return res.send(err);
             }

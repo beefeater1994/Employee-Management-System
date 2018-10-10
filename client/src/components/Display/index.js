@@ -9,7 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import EnhancedTableHead from './TableHead';
 import Button from "@material-ui/core/Button/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "./UI/EditIcon";
+import ProfileIcon from './UI/ProfileIcon';
 import Avatar from "./Avatar";
 
 function desc(a, b, orderBy) {
@@ -100,9 +100,9 @@ class EnhancedTable extends React.Component {
                                                     <Avatar avatar={n.avatar} gender={n.gender}/>
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Button variant="outlined" className={classes.button} onClick={() => this.props.editHandler(n)}>
-                                                        <EditIcon />
-                                                        EDIT
+                                                    <Button variant="outlined" className={classes.button} onClick={() => this.props.profileHandler(n)}>
+                                                        <ProfileIcon />
+                                                        Profile
                                                     </Button>
                                                 </TableCell>
                                                 <TableCell>

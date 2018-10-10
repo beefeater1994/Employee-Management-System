@@ -9,17 +9,6 @@ const genderOptions = [
     { key: 'male', text: 'Male', value: 'Male' },
     { key: 'female', text: 'Female', value: 'Female' }
 ];
-const levelOptions= [
-    { key: '1', text: '1', value: '1' },
-    { key: '2', text: '2', value: '2' },
-    { key: '3', text: '3', value: '3' },
-    { key: '4', text: '4', value: '4' },
-    { key: '5', text: '5', value: '5' },
-    { key: '6', text: '6', value: '6' },
-    { key: '7', text: '7', value: '7' },
-    { key: '8', text: '8', value: '8' },
-    { key: '9', text: '9', value: '9' },
-];
 
 class FormExampleForm extends Component{
     constructor(props) {
@@ -59,7 +48,6 @@ class FormExampleForm extends Component{
     };
     managerHandler = (e, { value }) => this.setState({ manager: value });
     genderHandler = (e, { value }) => this.setState({ gender: value });
-    levelHandler = (e, { value }) => this.setState({ level: value });
 
     fileChangeHandler = (event) => {
         this.setState({avatar: event.target.files[0]});
@@ -67,8 +55,8 @@ class FormExampleForm extends Component{
 
 
     render() {
-        // Your manager can only be the other employees whose level is above you.
-        const managerOptions = this.props.employees.data.filter(el => el.level < this.state.level).map(el => {
+        // Anyone can be your manager, handling circle is in edit part.
+        const managerOptions = this.props.employees.data.map(el => {
             return {
                 key: el._id,
                 text: el.name,
@@ -119,9 +107,8 @@ class FormExampleForm extends Component{
                                         <input type="text" name="title" placeholder="Title" value={this.state.title} onChange={this.changeHandler}/>
                                     </div>
                                     <div className="field">
-                                        <label>Level</label>
-                                        <Dropdown placeholder='Select Level' fluid selection options={levelOptions}
-                                                  onChange={this.levelHandler} value={this.state.level}/>
+                                        <label>Manager</label>
+                                        <Dropdown placeholder='Select Manager' fluid selection options={managerOptions} onChange={this.managerHandler} value={this.state.manager}/>
                                     </div>
                                 </div>
                                 <div className="two fields">
@@ -134,14 +121,8 @@ class FormExampleForm extends Component{
                                         <input type="text" name="email" placeholder="Email" value={this.state.email} onChange={this.changeHandler}/>
                                     </div>
                                 </div>
-                                <div className="fields">
-                                    <div className="eight wide field">
-                                        <label>Manager</label>
-                                        <Dropdown placeholder='Select Manager' fluid selection options={managerOptions} onChange={this.managerHandler} value={this.state.manager}/>
-                                    </div>
-                                    <div className="two wide field">
-                                    </div>
-                                    <div className="three wide field">
+                                <div className="two fields">
+                                    <div className="field">
                                         <label>Upload Avatar</label>
                                         <input
                                             accept="image/*"
@@ -156,7 +137,7 @@ class FormExampleForm extends Component{
                                             </Button>
                                         </label>
                                     </div>
-                                    <div className="three wide field">
+                                    <div className="field">
                                         <label>Submit</label>
                                         <Button variant="outlined" onClick={this.submitHandler}>
                                             Submit

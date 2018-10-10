@@ -2,6 +2,7 @@ const initState = { isFetching: false, data: [], err: null};
 
 const reducer = (state = initState, action) => {
     switch (action.type) {
+        // Actions to get all
         case 'GET_ALL_EMPLOYEES_START':
             return {
                 ...state,
@@ -20,6 +21,7 @@ const reducer = (state = initState, action) => {
                 err: null,
                 data: action.data
             };
+        // Actions to post one
         case "ADD_EMPLOYEE_START":
             return {
                 ...state,
@@ -47,6 +49,8 @@ const reducer = (state = initState, action) => {
                 ...state,
                 employee: ""
             };
+
+        // Actions to put one
         case "EDIT_EMPLOYEE_START":
             return {
                 ...state,
@@ -64,6 +68,7 @@ const reducer = (state = initState, action) => {
                 isFetching: false,
                 response: action.response
             };
+        // Actions to delete one
         case "DELETE_EMPLOYEE_FAIL":
             return {
                 ...state,
@@ -73,6 +78,25 @@ const reducer = (state = initState, action) => {
             return {
                 ...state,
                 response: action.response
+            };
+        // Actions to get one
+        case 'GET_ONE_EMPLOYEE_START':
+            return {
+                ...state,
+                isFetching: true
+            };
+        case 'GET_ONE_EMPLOYEE_FAIL':
+            return {
+                ...state,
+                error: action.error,
+                isFetching: false
+            };
+        case 'GET_ONE_EMPLOYEE_SUCCESS':
+            return {
+                ...state,
+                isFetching: false,
+                err: null,
+                profile: action.response
             };
         default:
             return state;

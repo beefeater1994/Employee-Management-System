@@ -115,7 +115,6 @@ const editEmployeeFail = (error) =>{
 };
 
 export const updateEmployee = (obj) => {
-    console.log(obj._id);
     return (dispatch, store) => {
         dispatch(editEmployeeStart());
         axios
@@ -162,6 +161,44 @@ export const deleteEmployee = (id) => {
     };
 };
 
+/*
+    Actions to get one employee
+ */
+const getOneEmployeeStart = () =>{
+    return {
+        type: 'GET_ONE_EMPLOYEE_START'
+    };
+};
+
+const getOneEmployeeSuccess = (response) =>{
+    return {
+        type: 'GET_ONE_EMPLOYEE_SUCCESS',
+        response
+    };
+};
+
+const getOneEmployeeFail = (error) =>{
+    return {
+        type: 'GET_ONE_EMPLOYEE_FAIL',
+        error
+    };
+};
+
+export const getOneEmployee = (id) => {
+    return (dispatch, store) => {
+        dispatch(getOneEmployeeStart());
+        axios
+            .get(`/employees/${id}`)
+            .then(response => {
+                dispatch(getOneEmployeeSuccess(response.data));
+                dispatch(getAllEmployees());
+            })
+            .catch(err => {
+                dispatch(getOneEmployeeFail(err));
+                console.log(err);
+            });
+    };
+};
 
 
 

@@ -6,7 +6,6 @@ const employeeSchema = new Schema({
     name: {type: String, required: true},
     title: {type: String, required: true},
     gender: {type: String},
-    level: {type: Number},
     cell: {type: String},
     email: {type: String},
     manager: {
