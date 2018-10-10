@@ -13,7 +13,7 @@ const genderOptions = [
 class FormExampleForm extends Component{
     constructor(props) {
         super(props);
-        this.state = {avatar:"", name: "", title: "", gender: "", level: "", cell: "", email: "", manager: {}}
+        this.state = {avatar:"", name: "", title: "", gender: "", level: "", cell: "", email: "", manager: ""}
     }
     componentDidMount() {
         this.props.getAllEmployees();
@@ -41,7 +41,7 @@ class FormExampleForm extends Component{
         formData.append("level", this.state.level);
         formData.append("cell", this.state.cell);
         formData.append("email", this.state.email);
-        formData.append("manager", JSON.stringify(this.state.manager));
+        formData.append("manager", this.state.manager === ("" || "None") ? "" :JSON.stringify(this.state.manager));
         formData.append("avatar", this.state.avatar, this.state.avatar.name);
         this.props.createNewEmployee(formData);
         this.props.history.push(`/employees`);

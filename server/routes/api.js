@@ -25,6 +25,7 @@ module.exports = function(app) {
     app.get('/employees', (req, res) => {
         Employee.find({}, function(err, users) {
             if (err) throw err;
+            console.log(`***[GET]*** all employees`);
             res.status(200).json(users);
         });
     });
@@ -33,6 +34,7 @@ module.exports = function(app) {
         let id = String(req.params.id);
         Employee.findOne({_id: id}, function(err, user) {
             if (err) throw err;
+            console.log(`***[GET]*** employee with id ${id}`);
             res.status(200).json(user);
         });
     });
@@ -49,28 +51,31 @@ module.exports = function(app) {
         });
         employee.save((err, data) => {
             if (err) return res.send(err);
-            console.log(`Create a new employee with id ${data._id}`);
+            console.log(`***[POST]*** a new employee with id ${data._id}`);
             // Push the new employee into his/her manager's DRs, if manager exists.
             if (data.manager.id !== undefined) {
                 const drObj = {
                     name: data.name,
                     id: data._id
                 };
-                Employee.findOneAndUpdate({_id: data.manager.id}, {$push:{direct_reports:drObj}}, (errManager) => {
+                Employee.findOneAndUpdate({_id: data.manager.id}, {$push:{direct_reports:drObj}}, (err) => {
                     if (err) {
-                        console.log(`Putting new employee ${data.name} whose id is ${data._id} into his manager ${data.manager.id}'s DR failed!\n` + errManager);
+                        console.log(`Putting new employee ${data.name} whose id is ${data._id} into his manager ${data.manager.id}'s DR failed!\n` + err);
                         return res.send(err);
                     }
                     console.log(`Putting new employee ${data.name} whose id is ${data._id} into his manager ${data.manager.id}'s DR succeed!`);
+                    console.log(`***[POST]*** a new employee id ${data._id} with DR handling finished.`);
                     res.send({ message: "Employee add success" });
                 });
             } else {
-                console.log(`This employee has no manager.`);
+                console.log(`***[POST]*** a new employee id ${data._id} without DR handling finished.`);
                 res.send({ message: "Employee add success" });
             }
         });
     });
     // Update a new employee
+    // 1. Save the employee's own information
+    // 2. Handle the manager changes if need
     app.put('/employees/:id', upload.single('avatar'), (req, res) => {
         let id = String(req.body.id);
         Employee.findOne({_id: id}, function(err, user) {
@@ -78,55 +83,90 @@ module.exports = function(app) {
                 console.log(err);
                 return res.send(err);
             }
-            let managerId = user.manager.id;
-            let dr = user.direct_reports;
-            // Save this new guy first
+            const originalManagerId = user.manager.id;
+            const originalAvatar = user.avatar;
             const employee = {
                 title: req.body.title,
                 gender: req.body.gender,
                 cell: req.body.cell,
                 email: req.body.email,
-                manager: JSON.parse(req.body.manager),
-                avatar: req.file === undefined ? "Icon" : req.file.filename,
+                manager: req.body.manager === "undefined" ? "" : JSON.parse(req.body.manager),
+                avatar: req.file === undefined ? originalAvatar : req.file.filename,
             };
-            Employee.findOneAndUpdate({_id: id}, employee, (err, newEmployee) => {
+            Employee.findOneAndUpdate({_id: id}, employee, (err) => {
                 if (err) {
                     console.log(err);
                     return res.send(err);
                 }
-                console.log(`***[Update]*** employee with id ${id}`);
-
+                console.log(`***[Update]*** employee ${id} own information.`);
+                // Delete this guy from original place and add it to the new place
+                const newMangerId = employee.manager.id;
+                const drObj = {
+                    name: employee.name,
+                    id: id
+                };
+                if (originalManagerId !== newMangerId) {
+                    console.log(`***[Update]*** employee ${id}---- Manager changes!`);
+                    Employee.findOneAndUpdate({direct_reports: {$elemMatch: {id: id}}}, { $pull: { direct_reports: {id: id}}},(err)=>{
+                        if (err) {
+                            console.log(err);
+                            return res.send(err);
+                        }
+                        if (originalManagerId !== undefined) {
+                            console.log(`***[Update]*** employee ${id}---- Delete him from original manager's direct reports!`);
+                        } else {
+                            console.log(`***[Update]*** employee ${id}---- He has no manager before!`);
+                        }
+                        Employee.findOneAndUpdate({_id: newMangerId}, {$push:{direct_reports:drObj}}, (err) => {
+                            if (err) {
+                                console.log(err);
+                                return res.send(err);
+                            }
+                            if (newMangerId !== undefined) {
+                                console.log(`***[Update]*** employee ${id}---- ADD him to new manager's direct reports!`);
+                            } else {
+                                console.log(`***[Update]*** employee ${id}---- He has no manager now!`);
+                            }
+                            console.log(`***[Update]*** employee ${id} with manager changes finished!`);
+                            return res.send(`***[Update]*** employee ${id} with manager changes finished!`);
+                        });
+                    });
+                } else {
+                    if (newMangerId !== undefined) {
+                        console.log(`***[Update]*** employee ${id} without manager changes finished!`);
+                    } else {
+                        console.log(`***[Update]*** employee ${id} He has no manager before and now!`)
+                    }
+                    console.log(`***[Update]*** employee ${id} without manager changes finished!`);
+                    return res.send(`***[Update]*** employee ${id} without manager changes finished!`);
+                }
             });
-
         });
-
-
     });
     // Delete a new employee
     app.delete('/employees/:id', (req, res) => {
         let id = String(req.params.id);
-        console.log(id);
         Employee.deleteOne({_id: id}, (err) =>{
             if (err) {
                 console.log(err);
                 return res.send(err);
             }
-            console.log("Deleted one employee with ID: " + id);
+            console.log(`***[Delete]*** employee ${id}!`);
             // 1->M relationship, deleted the manager, the DRs have no manager anymore, update DRS
             Employee.updateMany({"manager.id": id}, { $set: { "manager" : "" } },(err, user) =>{
                 if (err) {
                     console.log(err);
                     return res.send(err);
                 }
-                console.log("Deleted this guy as manager.");
+                console.log(`***[Delete]*** employee ${id} as a manager!`);
                 // 1->M relationship, delete this guy as one dr, update the manager
-                Employee.findOneAndUpdate({direct_reports: {$elemMatch: {id: id}}}, { $pull: { direct_reports: {id: id}}},(err, user)=>{
+                Employee.findOneAndUpdate({direct_reports: {$elemMatch: {id: id}}}, { $pull: { direct_reports: {id: id}}},(err)=>{
                     if (err) {
                         console.log(err);
                         return res.send(err);
                     }
-                    console.log("Delete this guy as a direct report");
-                    console.log("Delete finished!");
+                    console.log(`***[Delete]*** employee ${id} as a DR from his old manger!`);
+                    console.log(`***[Delete]*** employee ${id} finished!`);
                     res.send("Delete finished!")
                 });
             });
