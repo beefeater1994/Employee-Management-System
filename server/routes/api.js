@@ -46,7 +46,7 @@ module.exports = function(app) {
             gender: req.body.gender,
             cell: req.body.cell,
             email: req.body.email,
-            manager: JSON.parse(req.body.manager),
+            manager: req.body.manager === "" ? "" :JSON.parse(req.body.manager),
             avatar: req.file === undefined ? "Icon" : req.file.filename,
         });
         employee.save((err, data) => {
@@ -54,11 +54,7 @@ module.exports = function(app) {
             console.log(`***[POST]*** a new employee with id ${data._id}`);
             // Push the new employee into his/her manager's DRs, if manager exists.
             if (data.manager.id !== undefined) {
-                const drObj = {
-                    name: data.name,
-                    id: data._id
-                };
-                Employee.findOneAndUpdate({_id: data.manager.id}, {$push:{direct_reports:drObj}}, (err) => {
+                Employee.findOneAndUpdate({_id: data.manager.id}, {$push:{direct_reports:data._id}}, (err) => {
                     if (err) {
                         console.log(`Putting new employee ${data.name} whose id is ${data._id} into his manager ${data.manager.id}'s DR failed!\n` + err);
                         return res.send(err);
@@ -101,13 +97,9 @@ module.exports = function(app) {
                 console.log(`***[Update]*** employee ${id} own information.`);
                 // Delete this guy from original place and add it to the new place
                 const newMangerId = employee.manager.id;
-                const drObj = {
-                    name: employee.name,
-                    id: id
-                };
                 if (originalManagerId !== newMangerId) {
                     console.log(`***[Update]*** employee ${id}---- Manager changes!`);
-                    Employee.findOneAndUpdate({direct_reports: {$elemMatch: {id: id}}}, { $pull: { direct_reports: {id: id}}},(err)=>{
+                    Employee.findOneAndUpdate({direct_reports: id}, { $pull: { direct_reports: id}},(err)=>{
                         if (err) {
                             console.log(err);
                             return res.send(err);
@@ -117,7 +109,7 @@ module.exports = function(app) {
                         } else {
                             console.log(`***[Update]*** employee ${id}---- He has no manager before!`);
                         }
-                        Employee.findOneAndUpdate({_id: newMangerId}, {$push:{direct_reports:drObj}}, (err) => {
+                        Employee.findOneAndUpdate({_id: newMangerId}, {$push:{direct_reports:id}}, (err) => {
                             if (err) {
                                 console.log(err);
                                 return res.send(err);
@@ -160,7 +152,7 @@ module.exports = function(app) {
                 }
                 console.log(`***[Delete]*** employee ${id} as a manager!`);
                 // 1->M relationship, delete this guy as one dr, update the manager
-                Employee.findOneAndUpdate({direct_reports: {$elemMatch: {id: id}}}, { $pull: { direct_reports: {id: id}}},(err)=>{
+                Employee.findOneAndUpdate({direct_reports: id}, { $pull: { direct_reports: id}},(err)=>{
                     if (err) {
                         console.log(err);
                         return res.send(err);

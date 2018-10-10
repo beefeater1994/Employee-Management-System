@@ -11,6 +11,7 @@ import Button from "@material-ui/core/Button/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ProfileIcon from './UI/ProfileIcon';
 import Avatar from "./Avatar";
+import Link from "react-router-dom/es/Link";
 
 function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -90,6 +91,7 @@ class EnhancedTable extends React.Component {
                             <TableBody>
                                 {stableSort(data, getSorting(order, orderBy))
                                     .map(n => {
+                                        const linkUrl = `/managers/${n._id}`;
                                         return (
                                             <TableRow
                                                 hover
@@ -119,7 +121,9 @@ class EnhancedTable extends React.Component {
                                                 <TableCell>{n.cell}</TableCell>
                                                 <TableCell>{n.email}</TableCell>
                                                 <TableCell>{n.manager === undefined ? "" : n.manager.name}</TableCell>
-                                                <TableCell>{n.direct_reports === undefined ? 0 : n.direct_reports.length}</TableCell>
+                                                <TableCell>
+                                                    <Link to={linkUrl}>{n.direct_reports === undefined ? 0 : n.direct_reports.length}</Link>
+                                                    </TableCell>
                                             </TableRow>
                                         );
                                     })}

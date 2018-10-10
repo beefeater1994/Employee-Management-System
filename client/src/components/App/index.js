@@ -5,6 +5,7 @@ import Form from "../Form";
 import Main from "../Main";
 import Edit from "../Edit";
 import Profile from "../Profile";
+import Manager from "../Manager";
 
 class App extends Component {
     render() {
@@ -15,6 +16,7 @@ class App extends Component {
                     <Route path='/create' render={(props) => <Form {...props}/>}/>
                     <Route path='/edit/:id' render={(props) => <Edit {...props}/>}/>
                     <Route path='/employees/:id' render={(props) => <Profile {...props}/>}/>
+                    <Route path='/managers/:id' render={(props) => <Manager {...props}/>}/>
                 </div>
             </BrowserRouter>
         )

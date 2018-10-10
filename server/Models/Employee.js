@@ -14,8 +14,7 @@ const employeeSchema = new Schema({
     },
     direct_reports: [
         {
-            id: {type: String},
-            name: {type: String}
+            type: String
         }
     ],
 });

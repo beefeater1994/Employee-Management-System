@@ -3,6 +3,7 @@ import * as actions from "../../actions";
 import connect from "react-redux/es/connect/connect";
 import Button from "@material-ui/core/Button/Button";
 import EditIcon from "../Display/UI/EditIcon";
+import Link from "react-router-dom/es/Link";
 
 class Profile extends Component {
     componentDidMount() {
@@ -30,6 +31,7 @@ class Profile extends Component {
                     avatarUrl = "http://localhost:4000/defaultFemale.png";
                 }
             }
+            const linkUrl = `/managers/${profile._id}`;
             return (
                 <div>
                     <div className="ui fixed borderless inverted menu">
@@ -58,7 +60,7 @@ class Profile extends Component {
                                 <div className="content">
                                     <a className="header">{profile.name}</a>
                                     <div className="meta">
-                                        <span className="date">A {profile.gender} {profile.title}</span>
+                                        <span>A {profile.gender} {profile.title}</span>
                                     </div>
                                     <div className="description">
                                         {profile.cell}
@@ -70,7 +72,9 @@ class Profile extends Component {
                                 <div className="extra content">
                                     <a>
                                         <i className="user icon"></i>
+                                        <Link to={linkUrl}>
                                         {profile.direct_reports.length} {profile.direct_reports.length < 2 ? "Direct Report" : "Direct Reports"}
+                                        </Link>
                                     </a>
                                 </div>
                                 <Button variant="outlined" onClick={() => this.editHandler(profile)}>
