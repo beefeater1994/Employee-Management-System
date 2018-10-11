@@ -41,7 +41,10 @@ class Profile extends Component {
                                 <div className="ui form">
                                     <div className="inline fields">
                                         <div className="field">
-                                            <div className="ui green button" onClick={() => this.props.history.push(`/employees`)}>
+                                            <div className="ui green button" onClick={() => {
+                                                this.props.resetScrollCount();
+                                                this.props.history.push(`/employees`)
+                                            }}>
                                                 HOME
                                             </div>
                                         </div>
@@ -117,6 +120,9 @@ const mapDispatchToProps = dispatch => {
         setEmployeeToEdit: (obj) => {
             dispatch(actions.setEmployeeToEdit(obj));
         },
+        resetScrollCount: ()=> {
+            dispatch({type: "RESET_SCROLL_COUNT"});
+        }
     }
 };
 

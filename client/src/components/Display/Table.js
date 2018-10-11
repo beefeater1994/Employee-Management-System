@@ -57,9 +57,9 @@ class EnhancedTable extends React.Component {
         orderBy: 'name'
     };
 
-    componentDidMount() {
-        this.props.getEmployees();
-    }
+    // componentDidMount() {
+    //     this.props.getEmployees();
+    // }
 
     handleRequestSort = (event, property) => {
         const orderBy = property;
@@ -73,9 +73,6 @@ class EnhancedTable extends React.Component {
     render() {
         const { classes } = this.props;
         const { order, orderBy} = this.state;
-        if (this.props.employees.isFetching) {
-            return <div>Getting data</div>
-        }
         const {useSearchData, searchWord} = this.props.search;
         const data = useSearchData ? this.props.employees.data.filter(el => el.name === searchWord) : this.props.employees.data;
         return (
@@ -92,6 +89,7 @@ class EnhancedTable extends React.Component {
                                 {stableSort(data, getSorting(order, orderBy))
                                     .map(n => {
                                         const linkUrl = `/managers/${n._id}`;
+                                        const managerUrl = `/employees/${n.manager.id}`;
                                         return (
                                             <TableRow
                                                 hover
@@ -120,7 +118,7 @@ class EnhancedTable extends React.Component {
                                                 <TableCell>{n.gender}</TableCell>
                                                 <TableCell>{n.cell}</TableCell>
                                                 <TableCell>{n.email}</TableCell>
-                                                <TableCell>{n.manager === undefined ? "" : n.manager.name}</TableCell>
+                                                <TableCell>{n.manager === undefined ? "" : <Link to={managerUrl}>{n.manager.name}</Link>}</TableCell>
                                                 <TableCell>
                                                     <Link to={linkUrl}>{n.direct_reports === undefined ? 0 : n.direct_reports.length}</Link>
                                                     </TableCell>

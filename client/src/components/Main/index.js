@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import Display from '../Display/index';
+import Table from '../Display/Table';
 import connect from "react-redux/es/connect/connect";
 import * as actions from '../../actions'
 import Form from "semantic-ui-react/dist/commonjs/collections/Form/Form";
 import './main.css';
+import Scrolling from "../Display/Scrolling";
 
 
 class MainPage extends Component {
@@ -12,6 +13,9 @@ class MainPage extends Component {
         this.state = {
             input: ""
         }
+    }
+    componentDidMount() {
+        this.props.getEmployees();
     }
 
     changeHandler = (event) => {
@@ -34,6 +38,9 @@ class MainPage extends Component {
     };
 
     render() {
+        if (this.props.employees.isFetching) {
+            return <div>Getting data</div>
+        }
         return (
             <div>
                 <div className="ui fixed borderless inverted menu">
@@ -60,15 +67,20 @@ class MainPage extends Component {
                     </div>
                 </div>
                 <div className="ui grid massive message">
-                    <div>
-                        <Display
-                            employees={this.props.employees}
-                            getEmployees={this.props.getEmployees}
-                            search={this.props.search}
-                            profileHandler={this.profileHandler}
-                            deleteHandler={this.deleteHandler}
-                        />
-                    </div>
+                    {/*<Table*/}
+                        {/*employees={this.props.employees}*/}
+                        {/*getEmployees={this.props.getEmployees}*/}
+                        {/*search={this.props.search}*/}
+                        {/*profileHandler={this.profileHandler}*/}
+                        {/*deleteHandler={this.deleteHandler}*/}
+                    {/*/>*/}
+                    <Scrolling
+                        // employees={this.props.employees}
+                        // getEmployees={this.props.getEmployees}
+                        search={this.props.search}
+                        profileHandler={this.profileHandler}
+                        deleteHandler={this.deleteHandler}
+                    />
                 </div>
                 <div className="ui hidden divider"></div>
                 <div className="ui container">

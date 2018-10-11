@@ -13,6 +13,8 @@ import {
     Sidebar,
     Visibility,
 } from 'semantic-ui-react'
+import * as actions from "../../actions";
+import connect from "react-redux/es/connect/connect";
 
 const HomepageHeading = (props) =>{
     console.log(props);
@@ -23,10 +25,10 @@ const HomepageHeading = (props) =>{
                 content='Employee Management System'
                 inverted
                 style={{
-                    fontSize: props.mobile ? '2em' : '4em',
+                    fontSize: props.mobile ? '2em' : '3em',
                     fontWeight: 'normal',
                     marginBottom: 0,
-                    marginTop: props.mobile ? '1.5em' : '3em',
+                    marginTop: props.mobile ? '1.5em' : '4em',
                 }}
             />
             <Header
@@ -182,6 +184,7 @@ ResponsiveContainer.propTypes = {
 
 const HomepageLayout = (props) => {
     const homeButtonHandler = () => {
+
         props.history.push(`/employees`);
     };
     return (
@@ -203,6 +206,7 @@ const HomepageLayout = (props) => {
                                     <List.Item as='a'>Semantic UI</List.Item>
                                     <List.Item as='a'>Material UI</List.Item>
                                     <List.Item as='a'>Axios</List.Item>
+                                    <List.Item as='a'>Toastify</List.Item>
                                 </List>
                             </Grid.Column>
                             <Grid.Column width={7}>
@@ -221,5 +225,12 @@ const HomepageLayout = (props) => {
         </ResponsiveContainer>
     )
 }
+const mapDispatchToProps = dispatch => {
+    return {
+        resetScrollCount: ()=> {
+            dispatch({type: "RESET_SCROLL_COUNT"});
+        }
+    }
+};
 
-export default HomepageLayout
+export default connect(null, mapDispatchToProps)(HomepageLayout);

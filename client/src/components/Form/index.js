@@ -73,6 +73,7 @@ class FormExampleForm extends Component{
             formData.append("manager", this.state.manager === ("" || "None") ? "" :JSON.stringify(this.state.manager));
             formData.append("avatar", this.state.avatar, this.state.avatar.name);
             this.props.createNewEmployee(formData);
+            this.props.resetScrollCount();
             this.props.history.push(`/employees`);
         } else {
             err.forEach((el) => {
@@ -112,7 +113,10 @@ class FormExampleForm extends Component{
                             <div className="ui form">
                                 <div className="inline fields">
                                     <div className="field">
-                                        <div className="ui green button" onClick={() => this.props.history.push(`/employees`)}>
+                                        <div className="ui green button" onClick={() => {
+                                            this.props.resetScrollCount();
+                                            this.props.history.push(`/employees`)
+                                        }}>
                                             HOME
                                         </div>
                                     </div>
@@ -216,6 +220,9 @@ const mapDispatchToProps = dispatch => {
         },
         createNewEmployee: (newEmployee) => {
             dispatch(actions.createNewEmployee(newEmployee));
+        },
+        resetScrollCount: ()=> {
+            dispatch({type: "RESET_SCROLL_COUNT"});
         }
     }
 };

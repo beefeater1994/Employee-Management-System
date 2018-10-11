@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import * as actions from "../../actions";
 import connect from "react-redux/es/connect/connect";
 import { Button, Card, Image } from 'semantic-ui-react'
-import Header from "semantic-ui-react/dist/commonjs/elements/Header/Header";
 
 
 class Manager extends Component {
@@ -38,7 +37,10 @@ class Manager extends Component {
                                 <div className="ui form">
                                     <div className="inline fields">
                                         <div className="field">
-                                            <div className="ui green button" onClick={() => this.props.history.push(`/employees`)}>
+                                            <div className="ui green button" onClick={() => {
+                                                this.props.resetScrollCount();
+                                                this.props.history.push(`/employees`)
+                                            }}>
                                                 HOME
                                             </div>
                                         </div>
@@ -81,7 +83,10 @@ class Manager extends Component {
                             <div className="ui form">
                                 <div className="inline fields">
                                     <div className="field">
-                                        <div className="ui green button" onClick={() => this.props.history.push(`/employees`)}>
+                                        <div className="ui green button" onClick={() => {
+                                            this.props.resetScrollCount();
+                                            this.props.history.push(`/employees`)
+                                        }}>
                                             HOME
                                         </div>
                                     </div>
@@ -169,6 +174,9 @@ const mapDispatchToProps = dispatch => {
         },
         setEmployeeToEdit: (obj) => {
             dispatch(actions.setEmployeeToEdit(obj));
+        },
+        resetScrollCount: ()=> {
+            dispatch({type: "RESET_SCROLL_COUNT"});
         }
     }
 };
