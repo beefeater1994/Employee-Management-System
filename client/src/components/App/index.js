@@ -6,12 +6,14 @@ import Main from "../Main";
 import Edit from "../Edit";
 import Profile from "../Profile";
 import Manager from "../Manager";
+import Welcome from "../Welcome";
 
 class App extends Component {
     render() {
         return (
             <BrowserRouter>
                 <div>
+                    <Route path='/' exact={true} component={Welcome}/>
                     <Route path='/employees' exact={true} render={(props) => <Main {...props}/>}/>
                     <Route path='/create' render={(props) => <Form {...props}/>}/>
                     <Route path='/edit/:id' render={(props) => <Edit {...props}/>}/>

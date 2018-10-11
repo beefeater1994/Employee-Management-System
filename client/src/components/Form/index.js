@@ -4,6 +4,8 @@ import Button from "@material-ui/core/Button/Button";
 import { Dropdown } from 'semantic-ui-react'
 import connect from "react-redux/es/connect/connect";
 import * as actions from "../../actions";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const genderOptions = [
     { key: 'male', text: 'Male', value: 'Male' },
@@ -13,7 +15,7 @@ const genderOptions = [
 class FormExampleForm extends Component{
     constructor(props) {
         super(props);
-        this.state = {avatar:"", name: "", title: "", gender: "", level: "", cell: "", email: "", manager: ""}
+        this.state = {avatar:"", name: "", title: "", gender: "", cell: "", email: "", manager: ""}
     }
     componentDidMount() {
         this.props.getAllEmployees();
@@ -32,25 +34,58 @@ class FormExampleForm extends Component{
             this.setState({ email: tValue });
         }
     };
+    errHandler = (message) => toast.error(`🦄 ${message}`,{
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true
+    });
+    fileNotificationHandler = () => toast('🦄 You upload a new avatar!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+    });
 
     submitHandler = () => {
-        const formData = new FormData();
-        formData.append("name", this.state.name);
-        formData.append("title", this.state.title);
-        formData.append("gender", this.state.gender);
-        formData.append("level", this.state.level);
-        formData.append("cell", this.state.cell);
-        formData.append("email", this.state.email);
-        formData.append("manager", this.state.manager === ("" || "None") ? "" :JSON.stringify(this.state.manager));
-        formData.append("avatar", this.state.avatar, this.state.avatar.name);
-        this.props.createNewEmployee(formData);
-        this.props.history.push(`/employees`);
+        let err = [];
+        if (this.state.name === "") {
+            err.push("Employee should has a name!");
+        }
+        if (this.state.title === "") {
+            err.push("Employee should has a title!");
+        }
+        if (this.state.gender === "") {
+            err.push("Employee should has a gender!")
+        }
+        if (err.length === 0) {
+            const formData = new FormData();
+            formData.append("name", this.state.name);
+            formData.append("title", this.state.title);
+            formData.append("gender", this.state.gender);
+            formData.append("level", this.state.level);
+            formData.append("cell", this.state.cell);
+            formData.append("email", this.state.email);
+            formData.append("manager", this.state.manager === ("" || "None") ? "" :JSON.stringify(this.state.manager));
+            formData.append("avatar", this.state.avatar, this.state.avatar.name);
+            this.props.createNewEmployee(formData);
+            this.props.history.push(`/employees`);
+        } else {
+            err.forEach((el) => {
+                this.errHandler(el);
+            });
+        }
     };
     managerHandler = (e, { value }) => this.setState({ manager: value });
     genderHandler = (e, { value }) => this.setState({ gender: value });
 
     fileChangeHandler = (event) => {
         this.setState({avatar: event.target.files[0]});
+        this.fileNotificationHandler();
     };
 
 
@@ -148,6 +183,7 @@ class FormExampleForm extends Component{
                         </div>
                     </div>
                 </div>
+                <ToastContainer/>
                 <div className="ui hidden divider"></div>
                 <div className="ui container">
                     <div className="ui stackable grid">

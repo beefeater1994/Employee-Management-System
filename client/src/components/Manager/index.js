@@ -51,7 +51,7 @@ class Manager extends Component {
                     <div className="ui grid massive message">
                         <div className="ui container ">
                             <p style={{ fontSize: '1.33em' }}>
-                                Wow, seems this employee has no direct report!
+                                Wow, seems this employee has no direct report...
                             </p>
                         </div>
                     </div>

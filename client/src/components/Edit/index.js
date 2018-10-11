@@ -149,9 +149,9 @@ class FormExampleForm extends Component{
                                         </label>
                                     </div>
                                     <div className="field">
-                                        <label>Submit</label>
+                                        <label>Save</label>
                                         <Button variant="outlined" onClick={this.submitHandler}>
-                                            Submit
+                                            Save
                                         </Button>
                                     </div>
                                 </div>
