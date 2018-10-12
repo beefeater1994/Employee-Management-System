@@ -48,10 +48,12 @@ class MainPage extends Component {
                     </div>
                 </div>
                 <div className="ui grid massive message">
-                    <Scrolling
-                    profileHandler={this.profileHandler}
-                    deleteHandler={this.deleteHandler}
-                    />
+                    <div className="ui container">
+                        <Scrolling
+                        profileHandler={this.profileHandler}
+                        deleteHandler={this.deleteHandler}
+                        />
+                    </div>
                 </div>
                 <div className="ui hidden divider"></div>
                 <div className="ui container">

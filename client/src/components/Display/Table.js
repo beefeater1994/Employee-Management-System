@@ -89,7 +89,8 @@ class EnhancedTable extends React.Component {
                                 {stableSort(data, getSorting(order, orderBy))
                                     .map(n => {
                                         const linkUrl = `/managers/${n._id}`;
-                                        const managerUrl = `/employees/${n.manager.id}`;
+                                        console.log(n.manager);
+                                        const managerUrl = (n.manager === undefined || n.manager === "" || n.manager === "None") ? "" : `/employees/${n.manager.id}`;
                                         return (
                                             <TableRow
                                                 hover
@@ -118,7 +119,7 @@ class EnhancedTable extends React.Component {
                                                 <TableCell>{n.gender}</TableCell>
                                                 <TableCell>{n.cell}</TableCell>
                                                 <TableCell>{n.email}</TableCell>
-                                                <TableCell>{n.manager === undefined ? "" : <Link to={managerUrl}>{n.manager.name}</Link>}</TableCell>
+                                                <TableCell>{(n.manager === undefined || n.manager === "" || n.manager === "None") ? "" : <Link to={managerUrl}>{n.manager.name}</Link>}</TableCell>
                                                 <TableCell>
                                                     <Link to={linkUrl}>{n.direct_reports === undefined ? 0 : n.direct_reports.length}</Link>
                                                     </TableCell>

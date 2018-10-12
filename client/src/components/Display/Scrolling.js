@@ -5,6 +5,7 @@ import ProfileIcon from './UI/ProfileIcon';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import connect from "react-redux/es/connect/connect";
 import Link from "react-router-dom/es/Link";
+import "./UI/scrolling.css";
 
 class Scroll extends React.Component {
     state = {
@@ -42,7 +43,8 @@ class Scroll extends React.Component {
                             this.state.items.map(el => {
                                 let avatarUrl = "";
                                 const linkUrl = `/managers/${el._id}`;
-                                const managerUrl = `/employees/${el.manager.id}`;
+                                console.log(el.manager);
+                                const managerUrl = (el.manager === undefined || el.manager === "" || el.manager === "None")? "" : `/employees/${el.manager.id}`;
                                 if (el.avatar !== "Icon") {
                                     avatarUrl = "http://localhost:4000/" + el.avatar;
                                 } else {
@@ -53,12 +55,12 @@ class Scroll extends React.Component {
                                     }
                                 }
                                 return (
-                                    <Card key={el.id} centered fluid>
+                                    <Card className="scrollingCard" key={el.id} centered>
                                         <Card.Content>
                                             <Image floated='right' size='mini' src={avatarUrl}/>
                                             <Card.Header>{el.name}</Card.Header>
                                             {
-                                                el.manager === "" ? <Card.Meta>A {el.gender} {el.title}</Card.Meta> :
+                                                (el.manager === undefined || el.manager === "" || el.manager === "None") ? <Card.Meta>A {el.gender} {el.title}</Card.Meta> :
                                                     <Card.Meta>A {el.gender} {el.title} managed by <Link to={managerUrl}>{el.manager.name}</Link></Card.Meta>
                                             }
                                             <Card.Description>
