@@ -22,7 +22,7 @@ class Scroll extends React.Component {
                 items: this.state.items.concat(this.props.employees.data.slice(this.props.scroll.count + 2, this.props.scroll.count + 4)),
             });
             this.props.showMore();
-        }, 2000);
+        }, 1200);
     };
 
     render() {
@@ -35,7 +35,7 @@ class Scroll extends React.Component {
                         loader={<h4>Loading...</h4>}
                         endMessage={
                             <p style={{textAlign: 'center'}}>
-                                <b>Yay! You have seen it all</b>
+                                <b>Yay! You have meet all the employees!</b>
                             </p>
                         }>
                         {

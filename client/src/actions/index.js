@@ -135,7 +135,7 @@ export const updateEmployee = (obj) => {
  */
 const deleteEmployeeSuccess = (response) =>{
     return {
-        type: 'EDIT_EMPLOYEE_SUCCESS',
+        type: 'DELETE_EMPLOYEE_SUCCESS',
         response
     };
 };

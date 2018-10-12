@@ -13,7 +13,6 @@ import {
     Sidebar,
     Visibility,
 } from 'semantic-ui-react'
-import * as actions from "../../actions";
 import connect from "react-redux/es/connect/connect";
 
 const HomepageHeading = (props) =>{
@@ -41,7 +40,7 @@ const HomepageHeading = (props) =>{
                     marginTop: props.mobile ? '0.5em' : '1.5em',
                 }}
             />
-            <Button primary size='huge' onClick={props.homeButtonHandler}>
+            <Button primary size='huge' onClick={props.tableButtonHandler}>
                 Get Started
                 <Icon name='right arrow' />
             </Button>
@@ -88,12 +87,15 @@ class DesktopContainer extends Component {
                             size='large'
                         >
                             <Container>
-                                <Button as='a' inverted={!fixed} onClick={this.props.homeButtonHandler}>
-                                    Home
+                                <Button as='a' inverted onClick={this.props.tableButtonHandler}>
+                                    Table Home
+                                </Button>
+                                <Button as='a' inverted onClick={this.props.scrollButtonHandler}>
+                                    Card Home
                                 </Button>
                             </Container>
                         </Menu>
-                        <HomepageHeading homeButtonHandler={this.props.homeButtonHandler}/>
+                        <HomepageHeading tableButtonHandler={this.props.tableButtonHandler}/>
                     </Segment>
                 </Visibility>
 
@@ -105,7 +107,7 @@ class DesktopContainer extends Component {
 
 DesktopContainer.propTypes = {
     children: PropTypes.node,
-}
+};
 
 class MobileContainer extends Component {
     state = {}
@@ -127,8 +129,11 @@ class MobileContainer extends Component {
                 <Sidebar.Pushable>
                     <Sidebar as={Menu} animation='uncover' inverted vertical visible={sidebarOpened}>
                         <Menu.Item as='a' active>
-                            <Button as='a' inverted onClick={this.props.homeButtonHandler}>
-                                Home
+                            <Button as='a' inverted onClick={this.props.tableButtonHandler}>
+                                Table Home
+                            </Button>
+                            <Button as='a' inverted onClick={this.props.scrollButtonHandler}>
+                                Card Home
                             </Button>
                         </Menu.Item>
                     </Sidebar>
@@ -151,7 +156,7 @@ class MobileContainer extends Component {
                                     </Menu.Item>
                                 </Menu>
                             </Container>
-                            <HomepageHeading mobile homeButtonHandler={this.props.homeButtonHandler}/>
+                            <HomepageHeading mobile tableButtonHandler={this.props.tableButtonHandler}/>
                         </Segment>
 
                         {children}
@@ -167,13 +172,16 @@ MobileContainer.propTypes = {
 }
 
 const ResponsiveContainer = (props) => {
-    const homeButtonHandler = ()=> {
-        props.homeButtonHandler();
+    const scrollButtonHandler = () => {
+        props.scrollButtonHandler();
+    };
+    const tableButtonHandler = () => {
+        props.tableButtonHandler();
     };
     return (
         <div>
-            <DesktopContainer homeButtonHandler={homeButtonHandler}>{props.children}</DesktopContainer>
-            <MobileContainer homeButtonHandler={homeButtonHandler}>{props.children}</MobileContainer>
+            <DesktopContainer scrollButtonHandler={scrollButtonHandler} tableButtonHandler={tableButtonHandler}>{props.children}</DesktopContainer>
+            <MobileContainer scrollButtonHandler={scrollButtonHandler} tableButtonHandler={tableButtonHandler}>{props.children}</MobileContainer>
         </div>
     )
 }
@@ -183,12 +191,16 @@ ResponsiveContainer.propTypes = {
 }
 
 const HomepageLayout = (props) => {
-    const homeButtonHandler = () => {
-
+    const scrollButtonHandler = () => {
+        props.goToScrollMode();
+        props.history.push(`/employees`);
+    };
+    const tableButtonHandler = () => {
+        props.goToTableMode();
         props.history.push(`/employees`);
     };
     return (
-        <ResponsiveContainer homeButtonHandler={homeButtonHandler}>
+        <ResponsiveContainer scrollButtonHandler={scrollButtonHandler} tableButtonHandler={tableButtonHandler}>
             <Segment inverted vertical style={{ padding: '5em 0em' }}>
                 <Container>
                     <Grid inverted stackable>
@@ -206,7 +218,7 @@ const HomepageLayout = (props) => {
                                     <List.Item as='a'>Semantic UI</List.Item>
                                     <List.Item as='a'>Material UI</List.Item>
                                     <List.Item as='a'>Axios</List.Item>
-                                    <List.Item as='a'>Toastify</List.Item>
+                                    <List.Item as='a'>...</List.Item>
                                 </List>
                             </Grid.Column>
                             <Grid.Column width={7}>
@@ -216,6 +228,7 @@ const HomepageLayout = (props) => {
                                     <List.Item as='a'>Mongodb/Mongoose</List.Item>
                                     <List.Item as='a'>Multer</List.Item>
                                     <List.Item as='a'>RESTful API</List.Item>
+                                    <List.Item as='a'>...</List.Item>
                                 </List>
                             </Grid.Column>
                         </Grid.Row>
@@ -229,6 +242,12 @@ const mapDispatchToProps = dispatch => {
     return {
         resetScrollCount: ()=> {
             dispatch({type: "RESET_SCROLL_COUNT"});
+        },
+        goToScrollMode: ()=> {
+            dispatch({type: "SCROLL_MODE"});
+        },
+        goToTableMode: ()=> {
+            dispatch({type: "TABLE_MODE"});
         }
     }
 };
