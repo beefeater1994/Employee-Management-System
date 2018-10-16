@@ -24,6 +24,11 @@ class MainPage extends Component {
         this.props.deleteEmployee(id);
     };
 
+    modeChangeHandler = () => {
+        this.props.goToTableMode()
+        this.props.resetScrollCount();
+    };
+
     render() {
         if (this.props.employees.isFetching) {
             return <div>Getting data</div>
@@ -35,7 +40,7 @@ class MainPage extends Component {
                         <a className="header item">Employee Management System</a>
                         <div className="right menu">
                             <div className="ui buttons">
-                                <button className="ui button" onClick={() => this.props.goToTableMode()}>
+                                <button className="ui button" onClick={this.modeChangeHandler}>
                                     <i className="icon paper plane outline"></i>
                                     Switch Mode
                                 </button>
@@ -95,7 +100,7 @@ const mapDispatchToProps = dispatch => {
         },
         goToTableMode: ()=> {
             dispatch({type: "TABLE_MODE"});
-        }
+        },
     }
 };
 

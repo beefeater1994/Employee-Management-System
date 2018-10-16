@@ -36,7 +36,7 @@ class MainPage extends Component {
         this.props.deleteEmployee(id);
     };
 
-    modeChangeHnadler = () => {
+    modeChangeHandler = () => {
         this.props.goToScrollMode();
         this.props.resetScrollCount();
     };
@@ -62,7 +62,7 @@ class MainPage extends Component {
                                     <i className="icon user"></i>
                                     Show All Employee
                                 </button>
-                                <button className="ui button" onClick={this.modeChangeHnadler}>
+                                <button className="ui button" onClick={this.modeChangeHandler}>
                                     <i className="icon paper plane outline"></i>
                                     Switch Mode
                                 </button>
