@@ -54,6 +54,8 @@ class Scroll extends React.Component {
                                         avatarUrl = "http://localhost:4000/defaultFemale.png";
                                     }
                                 }
+                                const callLink = `tel:${el.cell}`;
+                                const emailLink = `mailto:${el.email}`;
                                 return (
                                     <Card className="scrollingCard" key={el.id} centered>
                                         <Card.Content>
@@ -64,10 +66,14 @@ class Scroll extends React.Component {
                                                     <Card.Meta>A {el.gender} {el.title} managed by <Link to={managerUrl}>{el.manager.name}</Link></Card.Meta>
                                             }
                                             <Card.Description>
-                                                {el.cell}
+                                                {
+                                                    el.cell === "" ? "" : <a href={callLink}>{el.cell}</a>
+                                                }
                                             </Card.Description>
                                             <Card.Description>
-                                                {el.email}
+                                                {
+                                                    el.email === "" ? "" : <a href={emailLink}>{el.email}</a>
+                                                }
                                             </Card.Description>
                                         </Card.Content>
                                         <div className="extra content">

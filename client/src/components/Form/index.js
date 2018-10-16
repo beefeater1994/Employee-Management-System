@@ -62,6 +62,14 @@ class FormExampleForm extends Component{
         if (this.state.gender === "") {
             err.push("Employee should has a gender!")
         }
+        const regexEmail = /[\w-]+@([\w-]+\.)+[\w-]/;
+        const regexPhone = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;
+        if (this.state.cell !== "" && !regexPhone.test(this.state.cell)) {
+            err.push("Cell number is not valid!");
+        }
+        if (this.state.email !== "" && !regexEmail.test(this.state.email)) {
+            err.push("Email is not valid!");
+        }
         if (err.length === 0) {
             const formData = new FormData();
             formData.append("name", this.state.name);

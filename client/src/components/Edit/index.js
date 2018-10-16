@@ -4,6 +4,8 @@ import Button from "@material-ui/core/Button/Button";
 import connect from "react-redux/es/connect/connect";
 import * as actions from "../../actions";
 import {Dropdown} from "semantic-ui-react";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const genderOptions = [
     { key: 'male', text: 'Male', value: 'Male' },
@@ -31,20 +33,47 @@ class FormExampleForm extends Component{
         }
     };
 
+    errHandler = (message) => toast.error(`🦄 ${message}`,{
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+    });
+
     submitHandler = () => {
-        const formData = new FormData();
-        formData.append("id", this.state._id);
-        formData.append("title", this.state.title);
-        formData.append("gender", this.state.gender);
-        formData.append("level", this.state.level);
-        formData.append("cell", this.state.cell);
-        formData.append("email", this.state.email);
-        formData.append("manager", JSON.stringify(this.state.manager));
-        formData.append("avatar", this.state.avatar, this.state.avatar.name);
-        this.props.updateEmployee(formData);
-        this.props.resetEmployeeToEdit();
-        this.props.resetScrollCount();
-        this.props.history.push(`/employees`);
+        let err = [];
+        if (this.state.title === "") {
+            err.push("Employee should has a title!");
+        }
+        const regexEmail = /[\w-]+@([\w-]+\.)+[\w-]/;
+        const regexPhone = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;
+        if (this.state.cell !== "" && !regexPhone.test(this.state.cell)) {
+            err.push("Cell number is not valid!");
+        }
+        if (this.state.email !== "" && !regexEmail.test(this.state.email)) {
+            err.push("Email is not valid!");
+        }
+        if (err.length === 0) {
+            const formData = new FormData();
+            formData.append("id", this.state._id);
+            formData.append("title", this.state.title);
+            formData.append("gender", this.state.gender);
+            formData.append("level", this.state.level);
+            formData.append("cell", this.state.cell);
+            formData.append("email", this.state.email);
+            formData.append("manager", JSON.stringify(this.state.manager));
+            formData.append("avatar", this.state.avatar, this.state.avatar.name);
+            this.props.updateEmployee(formData);
+            this.props.resetEmployeeToEdit();
+            this.props.resetScrollCount();
+            this.props.history.push(`/employees`);
+        } else {
+            err.forEach((el) => {
+                this.errHandler(el);
+            });
+        }
     };
 
     managerHandler = (e, { value }) => this.setState({ manager: value });
@@ -163,6 +192,7 @@ class FormExampleForm extends Component{
                         </div>
                     </div>
                 </div>
+                <ToastContainer/>
                 <div className="ui hidden divider"></div>
                 <div className="ui container">
                     <div className="ui stackable grid">

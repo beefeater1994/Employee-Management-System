@@ -91,6 +91,8 @@ class EnhancedTable extends React.Component {
                                         const linkUrl = `/managers/${n._id}`;
                                         console.log(n.manager);
                                         const managerUrl = (n.manager === undefined || n.manager === "" || n.manager === "None") ? "" : `/employees/${n.manager.id}`;
+                                        const callLink = `tel:${n.cell}`;
+                                        const emailLink = `mailto:${n.email}`;
                                         return (
                                             <TableRow
                                                 hover
@@ -117,8 +119,16 @@ class EnhancedTable extends React.Component {
                                                 </TableCell>
                                                 <TableCell>{n.title}</TableCell>
                                                 <TableCell>{n.gender}</TableCell>
-                                                <TableCell>{n.cell}</TableCell>
-                                                <TableCell>{n.email}</TableCell>
+                                                <TableCell>
+                                                    {
+                                                        n.cell === "" ? "" : <a href={callLink}>{n.cell}</a>
+                                                    }
+                                                    </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        n.email === "" ? "" : <a href={emailLink}>{n.email}</a>
+                                                    }
+                                                </TableCell>
                                                 <TableCell>{(n.manager === undefined || n.manager === "" || n.manager === "None") ? "" : <Link to={managerUrl}>{n.manager.name}</Link>}</TableCell>
                                                 <TableCell>
                                                     <Link to={linkUrl}>{n.direct_reports === undefined ? 0 : n.direct_reports.length}</Link>
