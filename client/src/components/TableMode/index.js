@@ -4,7 +4,6 @@ import connect from "react-redux/es/connect/connect";
 import * as actions from '../../actions'
 import Form from "semantic-ui-react/dist/commonjs/collections/Form/Form";
 import './main.css';
-import Scrolling from "../Display/Scrolling";
 
 
 class MainPage extends Component {
@@ -37,6 +36,11 @@ class MainPage extends Component {
         this.props.deleteEmployee(id);
     };
 
+    modeChangeHnadler = () => {
+        this.props.goToScrollMode();
+        this.props.resetScrollCount();
+    };
+
     render() {
         if (this.props.employees.isFetching) {
             return <div>Getting data</div>
@@ -58,7 +62,7 @@ class MainPage extends Component {
                                     <i className="icon user"></i>
                                     Show All Employee
                                 </button>
-                                <button className="ui button" onClick={() => this.props.goToScrollMode()}>
+                                <button className="ui button" onClick={this.modeChangeHnadler}>
                                     <i className="icon paper plane outline"></i>
                                     Switch Mode
                                 </button>
@@ -124,7 +128,10 @@ const mapDispatchToProps = dispatch => {
         },
         goToScrollMode: ()=> {
             dispatch({type: "SCROLL_MODE"});
-        }
+        },
+        resetScrollCount: ()=> {
+            dispatch({type: "RESET_SCROLL_COUNT"});
+        },
     }
 };
 
