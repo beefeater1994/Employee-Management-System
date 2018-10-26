@@ -98,6 +98,11 @@ const reducer = (state = initState, action) => {
                 err: null,
                 profile: action.response
             };
+        case 'RESET_ONE_EMPLOYEE':
+            return {
+                ...state,
+                profile: {}
+            }
         default:
             return state;
     }

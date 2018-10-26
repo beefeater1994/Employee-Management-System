@@ -184,6 +184,12 @@ const getOneEmployeeFail = (error) =>{
     };
 };
 
+export const resetOneEmployee = () =>{
+    return {
+        type: 'RESET_ONE_EMPLOYEE'
+    };
+};
+
 export const getOneEmployee = (id) => {
     return (dispatch, store) => {
         dispatch(getOneEmployeeStart());

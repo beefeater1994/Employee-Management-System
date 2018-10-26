@@ -36,10 +36,6 @@ class MainPage extends Component {
         this.props.deleteEmployee(id);
     };
 
-    modeChangeHandler = () => {
-        this.props.goToScrollMode();
-        this.props.resetScrollCount();
-    };
 
     render() {
         if (this.props.employees.isFetching) {
@@ -61,10 +57,6 @@ class MainPage extends Component {
                                 <button className="ui button" onClick={this.props.resetSearch}>
                                     <i className="icon user"></i>
                                     Show All Employee
-                                </button>
-                                <button className="ui button" onClick={this.modeChangeHandler}>
-                                    <i className="icon paper plane outline"></i>
-                                    Switch Mode
                                 </button>
                                 <button className="ui button" onClick={() => this.props.history.push(`/create`)}>
                                     <i className="icon user"></i>
@@ -125,12 +117,6 @@ const mapDispatchToProps = dispatch => {
         },
         getOneEmployee: (id) => {
             dispatch(actions.getOneEmployee(id));
-        },
-        goToScrollMode: ()=> {
-            dispatch({type: "SCROLL_MODE"});
-        },
-        resetScrollCount: ()=> {
-            dispatch({type: "RESET_SCROLL_COUNT"});
         },
     }
 };

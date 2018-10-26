@@ -33,14 +33,6 @@ class FormExampleForm extends Component{
         }
     };
 
-    errHandler = (message) => toast.error(`🦄 ${message}`,{
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true
-    });
 
     submitHandler = () => {
         let err = [];
@@ -67,11 +59,10 @@ class FormExampleForm extends Component{
             formData.append("avatar", this.state.avatar, this.state.avatar.name);
             this.props.updateEmployee(formData);
             this.props.resetEmployeeToEdit();
-            this.props.resetScrollCount();
             this.props.history.push(`/employees`);
         } else {
             err.forEach((el) => {
-                this.errHandler(el);
+                alert(el);
             });
         }
     };

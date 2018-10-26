@@ -38,7 +38,6 @@ class Manager extends Component {
                                     <div className="inline fields">
                                         <div className="field">
                                             <div className="ui green button" onClick={() => {
-                                                this.props.resetScrollCount();
                                                 this.props.history.push(`/employees`)
                                             }}>
                                                 HOME
